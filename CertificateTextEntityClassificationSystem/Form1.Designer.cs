@@ -52,6 +52,7 @@
             this.rich_status = new System.Windows.Forms.RichTextBox();
             this.txt_confidence = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.btn_prep = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -195,7 +196,7 @@
             // 
             this.btn_start.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_start.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_start.Location = new System.Drawing.Point(601, 312);
+            this.btn_start.Location = new System.Drawing.Point(653, 312);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(107, 37);
             this.btn_start.TabIndex = 19;
@@ -274,11 +275,24 @@
             this.label8.TabIndex = 36;
             this.label8.Text = "Confidence (%)";
             // 
+            // btn_prep
+            // 
+            this.btn_prep.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btn_prep.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_prep.Location = new System.Drawing.Point(534, 312);
+            this.btn_prep.Name = "btn_prep";
+            this.btn_prep.Size = new System.Drawing.Size(107, 37);
+            this.btn_prep.TabIndex = 37;
+            this.btn_prep.Text = "PREP";
+            this.btn_prep.UseVisualStyleBackColor = true;
+            this.btn_prep.Click += new System.EventHandler(this.btn_prep_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 573);
+            this.Controls.Add(this.btn_prep);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txt_confidence);
             this.Controls.Add(this.btn_ShowDB);
@@ -336,6 +350,7 @@
         private System.Windows.Forms.RichTextBox rich_status;
         private System.Windows.Forms.TextBox txt_confidence;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btn_prep;
     }
 }
 

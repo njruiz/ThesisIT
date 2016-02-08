@@ -65,3 +65,6 @@ D:\PERSONAL\NJ (LT)\THESIS IT\Project\CertificateTextEntityClassificationSystem\
 D:\PERSONAL\NJ (LT)\THESIS IT\Project\CertificateTextEntityClassificationSystem\CertificateTextEntityClassificationSystem\bin\Debug\IKVM.Runtime.JNI.dll
 D:\PERSONAL\NJ (LT)\THESIS IT\Project\CertificateTextEntityClassificationSystem\CertificateTextEntityClassificationSystem\bin\Debug\slf4j-api.dll
 D:\PERSONAL\NJ (LT)\THESIS IT\Project\CertificateTextEntityClassificationSystem\CertificateTextEntityClassificationSystem\bin\Debug\stanford-ner.dll
+D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\bin\Debug\CertificateTextEntityClassificationSystem.exe.config
+D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\obj\Debug\CertificateTextEntityClassificationSystem.exe
+D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\obj\Debug\CertificateTextEntityClassificationSystem.pdb

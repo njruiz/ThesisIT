@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AForge.Imaging.Filters;
-using Tesseract;
 using System.IO;
 using edu.stanford.nlp.ie.crf;
 
@@ -20,6 +19,8 @@ namespace CertificateTextEntityClassificationSystem
         private int count;
         private double totalConfidence;
         private string output;
+        string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+        string path = System.IO.Directory.GetCurrentDirectory();
         public Form1()
         {
             InitializeComponent();
@@ -27,28 +28,12 @@ namespace CertificateTextEntityClassificationSystem
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            rich_status.Text += "Removing Image Noise...\n";
-            image = new Bitmap(pictureBox1.Image);
-            preprocess(image);
-            //ConservativeSmoothing filter = new ConservativeSmoothing();
-            GaussianSharpen filter = new GaussianSharpen(4, 11);
-            filter.ApplyInPlace(image);
-
-            rich_status.Text += "Image Smoothening Successful.\n";
-            //image = greyscaleFilter.Apply(image);
-            //rich_status.Text += "Image Greyscaled\n";
-            pictureBox1.Image = image;
-
-            //engine = new TesseractEngine(@"D:\PERSONAL\NJ (LT)\THESIS IT\Project\CertificateTextEntityClassificationSystem\CertificateTextEntityClassificationSystem\bin\Debug\tessdata", "eng", EngineMode.Default);
-            //engine.DefaultPageSegMode = PageSegMode.SingleBlock;
-
             try
             {
                 tessnet2.Tesseract ocr = new tessnet2.Tesseract();
-                ocr.SetVariable("tessedit_char_whitelist", "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,$-/#&=()\"':?");
-                ocr.Init(@"D:\PERSONAL\NJ (LT)\THESIS IT\Project\CertificateTextEntityClassificationSystem\CertificateTextEntityClassificationSystem\bin\x64\Debug\tessdata", "eng", false);
+                ocr.SetVariable("tessedit_char_whitelist", "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,$-/#&=()\"'");
+                ocr.Init(path + @"\tessdata", "eng", false);
                 List<tessnet2.Word> result = ocr.DoOCR(image, Rectangle.Empty);
-                //var page = engine.Process(image);
                 foreach (tessnet2.Word word in result)
                 {
                     count++;
@@ -57,7 +42,7 @@ namespace CertificateTextEntityClassificationSystem
                     //rich_status.Text += ("" + word.Text + "(" + word.Confidence + ")\n");
                     output = string.Join(" ", result.Select(x => x.Text).ToList());
                     rich_status.Text = output;
-                    using (StreamWriter writetext = new StreamWriter(@"D:\PERSONAL\NJ (LT)\THESIS IT\Project\CertificateTextEntityClassificationSystem\Results.txt"))
+                    using (StreamWriter writetext = new StreamWriter(path + @"\Results.txt"))
                     {
                         writetext.WriteLine(output);
                     }
@@ -71,6 +56,19 @@ namespace CertificateTextEntityClassificationSystem
             {
 
             }
+        }
+
+        private void btn_prep_Click(object sender, EventArgs e)
+        {           
+            rich_status.Text += "Removing Image Noise...\n";
+            image = new Bitmap(pictureBox1.Image);
+            preprocess(image);
+            //ConservativeSmoothing filter = new ConservativeSmoothing();
+            GaussianSharpen filter = new GaussianSharpen(4, 11);
+            filter.ApplyInPlace(image);
+
+            rich_status.Text += "Image Smoothening Successful.\n";
+            pictureBox1.Image = image;
         }
 
         private void btn_pause_Click(object sender, EventArgs e)
@@ -144,5 +142,7 @@ namespace CertificateTextEntityClassificationSystem
             var classifier = CRFClassifier.getClassifierNoExceptions(directory + @"\english.all.3class.distsim.crf.ser.gz");
             rich_status.Text += classifier.classifyToString(data);
         }
+
+        
     }
 }
