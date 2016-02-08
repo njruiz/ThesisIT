@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using AForge.Imaging.Filters;
 using System.IO;
 using edu.stanford.nlp.ie.crf;
+using edu.stanford.nlp.util;
 
 namespace CertificateTextEntityClassificationSystem
 {
@@ -134,15 +135,27 @@ namespace CertificateTextEntityClassificationSystem
 
         }
 
-        private void recognize(String data)
+        private string recognize(String data)
         {
             //public static CRFClassifier classifier = CRFClassifier.getClassifierNoExceptions()
             var root = @"..\..\..\..\paket-files\nlp.stanford.edu\stanford-ner-2015-12-09";
             var directory = root + @"\classifiers";
-            var classifier = CRFClassifier.getClassifierNoExceptions(directory + @"\english.all.3class.distsim.crf.ser.gz");
-            rich_status.Text += classifier.classifyToString(data);
+            string result = "";
+            CRFClassifier classifier = CRFClassifier.getClassifierNoExceptions(@"\english.all.3class.distsim.crf.ser.gz");
+            var classified = classifier.classifyToCharacterOffsets(data).toArray();
+            for(int i = 0; i < classified.Length; i++)
+            {
+                Triple triple = (Triple)classified[i];
+                int second = Convert.ToInt32(triple.second().ToString());
+                int third = Convert.ToInt32(triple.third().ToString());
+                result += (triple.first().ToString() + '\t' + data.Substring(second, third - second));
+            }
+            return result;
         }
 
-        
+        private void btn_ShowDB_Click(object sender, EventArgs e)
+        {
+            rich_status.Text = recognize(output);
+        }
     }
 }

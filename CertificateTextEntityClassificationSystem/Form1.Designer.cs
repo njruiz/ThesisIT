@@ -214,6 +214,7 @@
             this.btn_ShowDB.TabIndex = 34;
             this.btn_ShowDB.Text = "Show DB";
             this.btn_ShowDB.UseVisualStyleBackColor = true;
+            this.btn_ShowDB.Click += new System.EventHandler(this.btn_ShowDB_Click);
             // 
             // btn_pause
             // 
