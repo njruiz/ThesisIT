@@ -39,8 +39,6 @@ namespace CertificateTextEntityClassificationSystem
                 {
                     count++;
                     totalConfidence += word.Confidence;
-                    //rich_status.Text += word.Confidence + ", " + word.Text + ", " + word.Top + ", " + word.Bottom + ", " + word.Left + ", " + word.Right + "\n";
-                    //rich_status.Text += ("" + word.Text + "(" + word.Confidence + ")\n");
                     output = string.Join(" ", result.Select(x => x.Text).ToList());
                     rich_status.Text = output;
                     using (StreamWriter writetext = new StreamWriter(path + @"\Results.txt"))
@@ -48,7 +46,7 @@ namespace CertificateTextEntityClassificationSystem
                         writetext.WriteLine(output);
                     }
                 }
-                //recognize(output);
+                rich_status.Text += recognize(output);
                 totalConfidence = (totalConfidence / count);
                 txt_confidence.Text = totalConfidence.ToString();
 
@@ -65,10 +63,10 @@ namespace CertificateTextEntityClassificationSystem
             image = new Bitmap(pictureBox1.Image);
             preprocess(image);
             //ConservativeSmoothing filter = new ConservativeSmoothing();
-            GaussianSharpen filter = new GaussianSharpen(4, 11);
-            filter.ApplyInPlace(image);
+            //GaussianSharpen filter = new GaussianSharpen(4, 11);
+            //filter.ApplyInPlace(image);
 
-            rich_status.Text += "Image Smoothening Successful.\n";
+            rich_status.Text += "Image Pre-processing Successful.\n";
             pictureBox1.Image = image;
         }
 
@@ -136,25 +134,23 @@ namespace CertificateTextEntityClassificationSystem
         }
 
         private string recognize(String data)
-        {
-            //public static CRFClassifier classifier = CRFClassifier.getClassifierNoExceptions()
-            var root = @"..\..\..\..\paket-files\nlp.stanford.edu\stanford-ner-2015-12-09";
-            var directory = root + @"\classifiers";
+        {            
             string result = "";
-            CRFClassifier classifier = CRFClassifier.getClassifierNoExceptions(@"\english.all.3class.distsim.crf.ser.gz");
+            CRFClassifier classifier = CRFClassifier.getClassifierNoExceptions(path + @"\classifiers\english.all.3class.distsim.crf.ser.gz");
             var classified = classifier.classifyToCharacterOffsets(data).toArray();
             for(int i = 0; i < classified.Length; i++)
             {
                 Triple triple = (Triple)classified[i];
                 int second = Convert.ToInt32(triple.second().ToString());
                 int third = Convert.ToInt32(triple.third().ToString());
-                result += (triple.first().ToString() + '\t' + data.Substring(second, third - second));
+                result += '\n' + (triple.first().ToString() + '\t' + data.Substring(second, third - second));
             }
             return result;
         }
 
         private void btn_ShowDB_Click(object sender, EventArgs e)
         {
+            //output = "Nelson F. Ruiz Jr. December 11, 1995";
             rich_status.Text = recognize(output);
         }
     }
