@@ -46,3 +46,7 @@ D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\bi
 D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\bin\x64\Debug\tessnet2_64.pdb
 D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\obj\x64\Debug\CertificateTextEntityClassificationSystem.exe
 D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\obj\x64\Debug\CertificateTextEntityClassificationSystem.pdb
+D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\bin\x64\Debug\x64\liblept171.dll
+D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\bin\x64\Debug\x64\libtesseract304.dll
+D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\bin\x64\Debug\x86\liblept171.dll
+D:\PERSONAL\NJ\PROGRAMMING\ThesisIT\CertificateTextEntityClassificationSystem\bin\x64\Debug\x86\libtesseract304.dll
