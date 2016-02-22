@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
+using System.Xml;
 using AForge.Imaging.Filters;
 using System.IO;
 using edu.stanford.nlp.ie.crf;
@@ -9,6 +11,8 @@ using Tesseract;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
+using ikvm.runtime;
+using System.Diagnostics;
 
 namespace CertificateTextEntityClassificationSystem
 {
@@ -20,6 +24,7 @@ namespace CertificateTextEntityClassificationSystem
         private string date;
         private string certificateType;
         private int count;
+        OpenFileDialog file = new OpenFileDialog();
         string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
         string path = System.IO.Directory.GetCurrentDirectory();
         public Form1()
@@ -60,7 +65,6 @@ namespace CertificateTextEntityClassificationSystem
                txt_type.Text = getCertificateType(output);
                totalConfidence = (totalConfidence / count);               
                txt_confidence.Text = totalConfidence.ToString();
-               
 
             }
             catch (Exception ex)
@@ -73,7 +77,7 @@ namespace CertificateTextEntityClassificationSystem
         {           
             rich_status.Text += "Removing Image Noise...\n";
             image = new Bitmap(pictureBox1.Image);
-            preprocess(image);
+            Preprocesses.monochrome(image);
             //ConservativeSmoothing filter = new ConservativeSmoothing();
             GaussianSharpen filter = new GaussianSharpen(4, 11);
             filter.ApplyInPlace(image);
@@ -112,15 +116,10 @@ namespace CertificateTextEntityClassificationSystem
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog file = new OpenFileDialog();
+            
             file.ShowDialog();
             pictureBox1.ImageLocation = file.FileName;
-            txt_award.Text = "";
-            txt_confidence.Text = "";
-            txt_date.Text = "";
-            txt_presenter.Text = "";
-            txt_recipient.Text = "";
-            txt_type.Text = "";
+            initializeSystem();            
             rich_status.Text = "File Opened: " + Convert.ToString(file.FileName) + "\n";
         }
 
@@ -129,27 +128,7 @@ namespace CertificateTextEntityClassificationSystem
             Close();
         }
 
-        private void preprocess(Bitmap image)
-        {
-            using (Graphics g = Graphics.FromImage(image))
-            {
-                var gray_matrix = new float[][]
-                {
-                    new float[] { 0.299f, 0.299f, 0.299f, 0, 0 },
-                    new float[] { 0.587f, 0.587f, 0.587f, 0, 0 },
-                    new float[] { 0.114f, 0.114f, 0.114f, 0, 0 },
-                    new float[] { 0,      0,      0,      1, 0 },
-                    new float[] { 0,      0,      0,      0, 1 }
-                };
-
-                var imageAttrib = new System.Drawing.Imaging.ImageAttributes();
-                imageAttrib.SetColorMatrix(new System.Drawing.Imaging.ColorMatrix(gray_matrix));
-                imageAttrib.SetThreshold((float)0.7);
-                var rec = new Rectangle(0, 0, image.Width, image.Height);
-                g.DrawImage(image, rec, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, imageAttrib);
-            }
-
-        }
+        
 
         private string recognize(String data)
         {            
@@ -168,10 +147,11 @@ namespace CertificateTextEntityClassificationSystem
 
         private void btn_ShowDB_Click(object sender, EventArgs e)
         {            
-            string temp = "|..|2i|i 2|r y an Cebu Educational Development Foundation for Information Technology atseaietintnrmat1auIerhnotogg|Philippine Information Technology General Certification Examination (Phil-IT GCE) Ruiz Nelson jr. Cebu Institute of Technology - University Examinee Name School This is to certify that you have successfully PASSED the Phil-IT General Certification Examination held on l December 26, 2015 at the Cebu Institute of Technology -- University , N. Buculso Avenue, Cebu City 6000 Philippines. y I e--e | It lvii | y it 'I OI-IN MIC L K. LAR|O WILFREDO T.| QR. | ,.,3 ,1.1 CEDF-IT yl Administrator CEDF-IT Manag g irector |L| gf";
-            //DateTime time = DateTime.Parse(temp);
-            rich_status.Text = checkHasDate(temp);
-            rich_status.Text += "agi here " + getDate(temp); // January 06, 2015
+            Process myproc = new Process() ;
+            myproc.StartInfo.UseShellExecute = false;
+            myproc.StartInfo.FileName = "java";
+            myproc.StartInfo.Arguments = "-jar " + path + @"\jTessBoxEditor\jTessBoxEditor.jar";
+            myproc.Start();
         }
 
         private String checkHasDate(string data)
@@ -196,11 +176,17 @@ namespace CertificateTextEntityClassificationSystem
         private string getDate(string data)
         {
             string regex = @"(January|February|March|April|May|June|July|August|September|October|November|December) *(\d|[0-3]\d), *\d{4}";
-            string regex2 = @"(January|February|March|April|May|June|July|August|September|October|November|December) *(\d|[0-3]\d) . *\d{4}";
-            if(Regex.Match(data, regex) != null)
+            string regex2 = @"(January|February|March|April|May|June|July|August|September|October|November|December) *(\d|[0-3]\d) , *\d{4}";
+            if (Regex.Match(data, regex).Value != "")
+            {
                 date = Regex.Match(data, regex).Value;
-            else if(Regex.Match(data, regex2) != null)
+                MessageBox.Show("agi 1: " + Regex.Match(data, regex).Value);
+            }
+            else if (Regex.Match(data, regex2).Value != "")
+            {
                 date = Regex.Match(data, regex2).Value;
+                MessageBox.Show("agi 2: " + Regex.Match(data, regex2).Value);
+            }
             return date;
         }
 
@@ -210,5 +196,16 @@ namespace CertificateTextEntityClassificationSystem
             certificateType = Regex.Match(data, regex).Value;
             return certificateType;
         }
+
+        private void initializeSystem()
+        {
+            txt_award.Text = "";
+            txt_confidence.Text = "";
+            txt_date.Text = "";
+            txt_presenter.Text = "";
+            txt_recipient.Text = "";
+            txt_type.Text = "";
+            output = "";
+        }       
     }
 }
